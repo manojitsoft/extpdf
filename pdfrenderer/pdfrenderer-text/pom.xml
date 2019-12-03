@@ -1,0 +1,113 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.extpdf</groupId>
+		<artifactId>pdfrenderer</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>pdfrenderer-text</artifactId>
+
+	<properties>
+		<junit.version>4.12</junit.version>
+		<openpdf.version>1.3.11</openpdf.version>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>itext</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+				<!-- Note: The iText Bouncy Castle dependencies have been moved to a 
+					new group and version on maven central. This caused some of the artifacts 
+					to be resolved twice. By excluding dependencies from the old group and adding 
+					corresponding dependencies from the updated group, the artifacts are only 
+					resolved once. -->
+				<dependency>
+					<groupId>com.extpdf</groupId>
+					<artifactId>pdfutil</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>com.extpdf</groupId>
+					<artifactId>pdfrenderer-core</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+					<version>${junit.version}</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>openpdf</id>
+			<dependencies>
+				<dependency>
+					<groupId>com.github.librepdf</groupId>
+					<artifactId>openpdf</artifactId>
+					<version>${openpdf.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.extpdf</groupId>
+					<artifactId>pdfrenderer-core</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.extpdf</groupId>
+					<artifactId>pdfutil</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+					<version>${junit.version}</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>../</directory>
+				<targetPath>${project.build.outputDirectory}/META-INF</targetPath>
+				<includes>
+					<include>LICENSE*</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes/jars</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+	</build>
+</project>
